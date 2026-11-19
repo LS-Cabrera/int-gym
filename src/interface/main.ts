@@ -73,7 +73,10 @@ function createFeeEditor(member: Member): HTMLDivElement {
   button.className = "btn btn-outline-secondary";
   button.textContent = "Guardar cuota";
   button.addEventListener("click", () => {
-    // TODO: editar la cuota del socio con el valor de input
+    member.monthlyFee = input.valueAsNumber;
+
+    updateList();
+    updateTotals();
   });
   group.append(input, button);
   return group;
@@ -89,6 +92,9 @@ function createCard(member: Member): HTMLDivElement {
   const title = document.createElement("h5");
   title.className = "card-title";
   title.textContent = member.name;
+  const plan = document.createElement("span");
+  plan.className = "badge";
+  plan.innerText = member.plan;
   const lines = [
     `Documento: ${member.documentId}`,
     `Plan: ${PLAN_LABELS[member.plan]}`,
@@ -97,7 +103,7 @@ function createCard(member: Member): HTMLDivElement {
   if (member.discount > 0) {
     lines.push(`Descuento: ${member.discount}%`);
   }
-  body.append(title, ...lines.map(createText));
+  body.append(title, ...lines.map(createText), plan);
   const footer = document.createElement("div");
   footer.className = "card-footer bg-transparent";
   footer.append(createFeeEditor(member));

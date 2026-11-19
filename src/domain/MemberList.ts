@@ -1,4 +1,4 @@
-import type { Member } from "./Member.ts";
+import { Member } from "./Member.ts";
 
 export class MemberList {
   #items: Member[] = [];
@@ -14,7 +14,25 @@ export class MemberList {
   }
 
   updateFee(_documentId: string, _fee: number): void {
-    // TODO: cambiar la cuota del socio con ese documento
+    const exists = this.#items.some(
+      (member) => member.documentId === _documentId,
+    );
+    const newList: Member[] = [];
+
+    if (exists) {
+      while (this.#items.length > 0) {
+        const m = this.#items.pop();
+        if (m && m.documentId !== _documentId) {
+          newList.push(m);
+        } else if (m && m.documentId === _documentId) {
+          m.monthlyFee = _fee;
+          newList.push(m);
+        }
+      }
+      this.#items = newList;
+    } else {
+      throw new Error("El socio no existe");
+    }
   }
 
   getItems(): readonly Member[] {
@@ -26,7 +44,17 @@ export class MemberList {
   }
 
   totalDiscounted(): number {
-    // TODO: sumar las cuotas de los socios con el descuento aplicado
-    return 0;
+    let total = 0;
+
+    for (const m of this.#items) {
+      if (m.discount > 0) {
+        const discountApplied = m.monthlyFee * (m.discount / 100);
+        total = total + m.monthlyFee - discountApplied;
+      } else {
+        total = total + m.monthlyFee;
+      }
+    }
+
+    return total;
   }
 }

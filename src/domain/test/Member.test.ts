@@ -55,4 +55,29 @@ describe("Member", () => {
       "Ana Pérez (doc. 12345678) - Plan Completo - $1500",
     );
   });
+
+  test("store discount", () => {
+    member.discount = 20;
+    expect(member.discount).toBe(20);
+  });
+
+  test("throw error when discount is < 0", () => {
+    expect(() => (member.discount = -10)).toThrow(
+      "El descuento debe estar entre 0 y 100",
+    );
+  });
+
+  test("throw error when discount is > 100", () => {
+    expect(() => (member.discount = 101)).toThrow(
+      "El descuento debe estar entre 0 y 100",
+    );
+  });
+
+  test("to string shows discount", () => {
+    member.discount = 25;
+
+    expect(member.toString()).toBe(
+      "Ana Pérez (doc. 12345678) - Plan Completo - $1500 - Descuento: 25%",
+    );
+  });
 });

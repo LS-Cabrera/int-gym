@@ -103,3 +103,7 @@ h1 {
   background-color: var(--accent);
   margin-left: 0.25rem;
 }
+
+span {
+  background-color: #20242a;
+}
